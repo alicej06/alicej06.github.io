@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alice Jiang — AI for Business @ USC</title>
+  <meta name="description" content="Alice Jiang — USC sophomore studying AI for Business. I build at the intersection of machine learning, product, and research.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:    #f5f0e8;
+      --paper: #fffdf8;
+      --ink:   #2a2118;
+      --ink2:  #6a5a48;
+      --ink3:  #9a8a78;
+      --gold:  #c8a870;
+      --gold2: #9a7840;
+      --border: rgba(0,0,0,0.07);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: #1a1410;
+      font-family: 'DM Sans', sans-serif;
+      cursor: none;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Custom Cursor ─────────────────────────────────────────────── */
+    #cursor {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99999;
+      width: 18px; height: 42px;
+      transform: translate(-50%, -10px);
+      transition: transform 0.1s ease;
+      will-change: left, top;
+      top: -100px; left: -100px;
+    }
+    #cursor.big { transform: translate(-50%, -10px) scale(1.35); }
+
+    /* ── Iris / Camera-Shutter Reveal ──────────────────────────────── */
+    #site {
+      background: var(--bg);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+      min-height: 100vh;
+      animation: iris 1.15s cubic-bezier(0.77, 0, 0.18, 1) both;
+    }
+    @keyframes iris {
+      0%   { clip-path: circle(0px at 50% 36%); }
+      100% { clip-path: circle(160% at 50% 36%); }
+    }
+
+    /* ── Navigation ────────────────────────────────────────────────── */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 52px;
+      background: var(--bg);
+      border-bottom: 0.5px solid var(--border);
+      position: sticky; top: 0; z-index: 200;
+    }
+    .nav-logo {
+      font-family: 'Alex Brush', cursive;
+      font-size: 28px; color: var(--ink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a {
+      font-size: 11px; color: var(--ink3); text-decoration: none;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* ── Hero ──────────────────────────────────────────────────────── */
+    .hero {
+      padding: 68px 52px 56px;
+      display: flex; gap: 36px; align-items: center;
+      max-width: 960px; margin: 0 auto;
+    }
+
+    /* Portrait polaroid */
+    .hero-pol {
+      flex-shrink: 0; background: #fff;
+      padding: 12px 12px 52px; width: 214px;
+      position: relative; transform: rotate(-3.5deg);
+      box-shadow: 4px 8px 30px rgba(0,0,0,0.14), 0 2px 6px rgba(0,0,0,0.08);
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .hero-pol:hover {
+      box-shadow: 6px 14px 44px rgba(0,0,0,0.18), 0 4px 12px rgba(200,168,112,0.25);
+      transform: rotate(-1.5deg) translateY(-6px);
+    }
+    .hero-pol-img {
+      width: 190px; height: 228px;
+      overflow: hidden; background: #d4c8b8;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-pol-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-pol-cap {
+      position: absolute; bottom: 14px; left: 0; right: 0;
+      text-align: center;
+      font-family: 'Alex Brush', cursive; font-size: 19px; color: #5a4a38;
+    }
+
+    /* Postcard */
+    .hero-card {
+      flex: 1; position: relative;
+      transform: rotate(1.2deg);
+      box-shadow: 2px 6px 24px rgba(0,0,0,0.09);
+      background: #fff; border: 0.5px solid var(--border);
+      display: flex; flex-direction: column;
+      min-height: 300px;
+    }
+    .card-photo {
+      height: 126px; overflow: hidden; background: #e0d8cc;
+      flex-shrink: 0; display: flex;
+      align-items: center; justify-content: center;
+      position: relative;
+    }
+    .card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .card-photo-ph {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; color: rgba(80,60,40,0.38);
+      letter-spacing: 0.14em; text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .card-photo-line { height: 0.5px; background: rgba(200,168,112,0.3); flex-shrink: 0; }
+    .card-body {
+      flex: 1; position: relative;
+      padding: 18px 20px 20px;
+    }
+    .card-vline {
+      position: absolute; top: 0; bottom: 0; left: 57%;
+      width: 1px; background: rgba(220,180,130,0.28);
+    }
+    .card-rules {
+      position: absolute;
+      left: 58%; right: 14px; top: 14px; bottom: 14px;
+      display: flex; flex-direction: column; justify-content: space-evenly;
+    }
+    .card-rule { height: 0.5px; background: rgba(0,0,0,0.055); }
+    .card-stamp {
+      position: absolute; top: 14px; right: 14px;
+      width: 54px; height: 66px;
+      border: 1.5px solid var(--gold);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px;
+      background: var(--paper);
+    }
+    .stamp-t {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; font-weight: 600; color: var(--gold2); line-height: 1;
+    }
+    .stamp-s {
+      font-size: 7px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .card-postmark {
+      position: absolute; top: 18px; right: 80px;
+      width: 50px; height: 50px; border-radius: 50%;
+      border: 1.5px solid rgba(0,0,0,0.1);
+      display: flex; align-items: center; justify-content: center;
+      transform: rotate(-10deg);
+    }
+    .postmark-t {
+      font-size: 7px; color: rgba(0,0,0,0.2);
+      text-align: center; letter-spacing: 0.06em; line-height: 1.4;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .card-content { max-width: 54%; position: relative; z-index: 1; }
+    .card-greeting {
+      font-size: 9.5px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: #b8a890; margin-bottom: 7px;
+    }
+    .card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 44px; font-weight: 300; font-style: italic;
+      color: var(--ink); line-height: 1.0; letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+    .card-bio {
+      font-size: 11.5px; color: var(--ink2);
+      line-height: 1.78; font-weight: 300; margin-bottom: 14px;
+    }
+    .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ctag {
+      font-size: 9.5px; color: #8a7a68;
+      border: 0.5px solid rgba(0,0,0,0.12);
+      padding: 3px 11px; border-radius: 999px;
+    }
+
+    /* ── Section Divider ───────────────────────────────────────────── */
+    .sec-div {
+      display: flex; align-items: center; gap: 20px;
+      padding: 4px 52px 36px;
+      max-width: 960px; margin: 0 auto;
+    }
+    .sdl { flex: 1; height: 0.5px; background: rgba(0,0,0,0.1); }
+    .sdlabel {
+      font-family: 'Alex Brush', cursive; font-size: 24px;
+      color: #b8a890; white-space: nowrap;
+    }
+
+    /* ── Projects ──────────────────────────────────────────────────── */
+    .proj-section {
+      padding: 0 52px 72px;
+      max-width: 960px; margin: 0 auto;
+    }
+    .proj-row {
+      display: flex; align-items: flex-start;
+      justify-content: center; margin-bottom: 18px;
+    }
+
+    .pol {
+      background: #fff; padding: 10px 10px 0;
+      position: relative; flex-shrink: 0;
+      cursor: none; text-decoration: none; display: block;
+      transform: rotate(var(--rot, 0deg)) translateY(22px);
+      opacity: 0;
+      transition:
+        opacity 0.55s ease,
+        transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.3s ease;
+      box-shadow: 2px 4px 14px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .pol.in {
+      opacity: 1;
+      transform: rotate(var(--rot, 0deg)) translateY(0);
+    }
+    .pol.in:hover {
+      z-index: 20;
+      transform: rotate(calc(var(--rot, 0deg) * 0.35)) translateY(-12px) scale(1.03);
+      box-shadow: 5px 20px 52px rgba(0,0,0,0.17), 0 4px 16px rgba(200,168,112,0.3);
+    }
+    .pol-img {
+      overflow: hidden; position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pol-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .pol-ph {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 10px;
+    }
+    .pol-ph small {
+      font-size: 8px; color: rgba(0,0,0,0.28);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .pol-cap {
+      padding: 10px 8px 13px; min-height: 60px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px;
+    }
+    .pol-title {
+      font-family: 'Alex Brush', cursive; font-size: 20px;
+      color: var(--ink); line-height: 1.1; text-align: center;
+    }
+    .pol-sub {
+      font-size: 8.5px; color: var(--ink3);
+      letter-spacing: 0.07em; text-transform: uppercase; text-align: center;
+    }
+    .pol-badge {
+      position: absolute; top: 7px; right: 7px;
+      background: #ffe44d; border-radius: 999px;
+      font-size: 7.5px; font-weight: 500; color: #7a5a00;
+      padding: 2px 8px; letter-spacing: 0.04em;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    }
+
+    /* ── Pin ───────────────────────────────────────────────────────── */
+    .pin {
+      position: absolute; top: -20px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 5; pointer-events: none;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.28));
+      transition: filter 0.3s ease, transform 0.3s ease;
+    }
+    .pol.in:hover .pin,
+    .hero-pol:hover .pin {
+      filter: drop-shadow(0 4px 9px rgba(0,0,0,0.33));
+      transform: translateX(-50%) translateY(-3px);
+    }
+
+    /* ── Experience ────────────────────────────────────────────────── */
+    .exp-section {
+      padding: 0 52px 72px;
+      max-width: 960px; margin: 0 auto;
+    }
+    .exp-row {
+      display: flex; justify-content: center;
+      align-items: flex-start; margin-bottom: 0;
+    }
+    .exp-card {
+      position: relative; padding: 24px 22px 20px;
+      transform: rotate(var(--rot, 0deg)) translateY(20px);
+      opacity: 0;
+      transition:
+        opacity 0.5s ease,
+        transform 0.44s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.25s ease;
+      box-shadow: 1px 3px 12px rgba(0,0,0,0.08);
+      background: var(--paper);
+      background-image: repeating-linear-gradient(
+        transparent 0px, transparent 22px,
+        rgba(200,170,130,0.12) 22px, rgba(200,170,130,0.12) 23px
+      );
+    }
+    .exp-card.in {
+      opacity: 1; transform: rotate(var(--rot, 0deg)) translateY(0);
+    }
+    .exp-card.in:hover {
+      z-index: 20;
+      transform: rotate(0deg) translateY(-8px);
+      box-shadow: 4px 16px 40px rgba(0,0,0,0.13), 0 2px 8px rgba(200,168,112,0.22);
+    }
+    .exp-card::after {
+      content: ''; position: absolute;
+      left: 44px; top: 36px; bottom: 14px;
+      width: 1px; background: rgba(220,150,140,0.28);
+      pointer-events: none;
+    }
+    .exp-co {
+      font-family: 'Playfair Display', serif;
+      font-size: 15px; font-style: italic; color: var(--ink);
+      margin-bottom: 2px; position: relative; z-index: 1;
+    }
+    .exp-role {
+      font-size: 9.5px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--gold2);
+      margin-bottom: 1px; position: relative; z-index: 1;
+    }
+    .exp-date {
+      font-size: 9.5px; font-style: italic;
+      color: #b8a890; margin-bottom: 10px; position: relative; z-index: 1;
+    }
+    .exp-ul { list-style: none; position: relative; z-index: 1; }
+    .exp-ul li {
+      font-size: 10.5px; color: var(--ink2);
+      line-height: 1.65; padding-left: 14px;
+      position: relative; margin-bottom: 3px;
+    }
+    .exp-ul li::before {
+      content: '—'; position: absolute; left: 0;
+      color: var(--gold); font-size: 9.5px;
+    }
+
+    /* ── Contact ───────────────────────────────────────────────────── */
+    .contact-wrap {
+      padding: 0 52px 56px;
+      max-width: 960px; margin: 0 auto;
+    }
+    .contact-card {
+      background: #fff; padding: 38px 44px;
+      display: flex; justify-content: space-between; align-items: center;
+      border: 0.5px solid var(--border); position: relative;
+      box-shadow: 2px 4px 22px rgba(0,0,0,0.07);
+    }
+    .pin-l { left: 68px; }
+    .pin-r { right: 68px; }
+    .contact-h2 {
+      font-family: 'Alex Brush', cursive; font-size: 34px;
+      color: var(--ink); margin-bottom: 8px;
+    }
+    .contact-sub { font-size: 11.5px; color: #8a7a68; line-height: 1.75; }
+    .contact-sub a { color: #8a7a68; text-decoration: none; transition: color 0.2s; }
+    .contact-sub a:hover { color: var(--ink); }
+    .contact-btn {
+      background: var(--ink); color: var(--bg);
+      font-size: 11.5px; padding: 12px 26px;
+      border-radius: 999px; text-decoration: none;
+      letter-spacing: 0.06em; white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .contact-btn:hover { background: #4a3a28; transform: translateY(-2px); }
+
+    /* ── Footer ────────────────────────────────────────────────────── */
+    footer {
+      text-align: center; padding: 18px;
+      font-size: 11px; color: #b8a890; letter-spacing: 0.1em;
+      border-top: 0.5px solid rgba(0,0,0,0.06);
+    }
+
+    /* ── Mobile ────────────────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      body { cursor: auto; }
+      #cursor { display: none; }
+      nav { padding: 16px 24px; }
+      .nav-links { gap: 20px; }
+      .hero { flex-direction: column; padding: 36px 24px; align-items: center; }
+      .hero-pol { transform: rotate(-2deg); }
+      .hero-card { transform: rotate(0deg); }
+      .sec-div { padding: 4px 24px 28px; }
+      .proj-section, .exp-section { padding: 0 24px 48px; }
+      .proj-row, .exp-row { flex-direction: column; align-items: center; }
+      .pol { margin-right: 0 !important; margin-top: 24px !important; }
+      .exp-card { margin-right: 0 !important; margin-top: 20px !important; }
+      .contact-wrap { padding: 0 24px 40px; }
+      .contact-card { flex-direction: column; gap: 24px; padding: 28px 24px; text-align: center; }
+      .pin-l, .pin-r { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Custom Cursor (pin icon) -->
+<div id="cursor" aria-hidden="true">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="18" height="42">
+    <circle cx="9" cy="9" r="8" fill="#c8a870" stroke="#8a6a40" stroke-width="1.2"/>
+    <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+    <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+    <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#b89060" stroke="#8a6a40" stroke-width="0.8"/>
+  </svg>
+</div>
+
+<div id="site">
+
+  <!-- ─── NAVIGATION ─────────────────────────────────────────────── -->
+  <nav role="navigation" aria-label="Main navigation">
+    <a class="nav-logo" href="index.html">alice jiang</a>
+    <div class="nav-links">
+      <a href="#about">about</a>
+      <a href="#projects">projects</a>
+      <a href="#experience">experience</a>
+      <a href="#contact">say hello</a>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ───────────────────────────────────────────────────── -->
+  <section class="hero" id="about" aria-label="Introduction">
+
+    <!-- Portrait Polaroid -->
+    <div class="hero-pol">
+      <div class="pin" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="20" height="46">
+          <circle cx="9" cy="9" r="8" fill="#c8a870" stroke="#8a6a40" stroke-width="1.2"/>
+          <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+          <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+          <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#b89060" stroke="#8a6a40" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="hero-pol-img">
+        <!-- Replace images/alice.jpg with your portrait photo -->
+        <img src="images/alice.jpg" alt="Alice Jiang"
+             onerror="this.outerHTML='<svg width=\'190\' height=\'228\' viewBox=\'0 0 190 228\' xmlns=\'http://www.w3.org/2000/svg\'><rect width=\'190\' height=\'228\' fill=\'#c8bfb0\'/><ellipse cx=\'95\' cy=\'90\' rx=\'40\' ry=\'42\' fill=\'#a89880\'/><ellipse cx=\'95\' cy=\'88\' rx=\'27\' ry=\'29\' fill=\'#d4c8b8\'/><ellipse cx=\'95\' cy=\'178\' rx=\'60\' ry=\'52\' fill=\'#b8ab98\'/><text x=\'95\' y=\'220\' text-anchor=\'middle\' font-size=\'10\' fill=\'rgba(80,60,40,0.4)\' font-family=\'DM Sans,sans-serif\' letter-spacing=\'0.08em\'>your photo here</text></svg>'">
+      </div>
+      <div class="hero-pol-cap">alice, los angeles</div>
+    </div>
+
+    <!-- Postcard -->
+    <div class="hero-card" aria-label="About Alice">
+      <!-- Photo area — add images/hero-bg.jpg (landscape of LA, USC campus, etc.) -->
+      <div class="card-photo">
+        <img src="images/hero-bg.jpg" alt="Los Angeles"
+             onerror="this.parentElement.innerHTML='<div class=\'card-photo-ph\'>add a photo — LA, USC, anywhere</div>'">
+      </div>
+      <div class="card-photo-line"></div>
+      <div class="card-body">
+        <div class="card-vline"></div>
+        <div class="card-rules">
+          <div class="card-rule"></div>
+          <div class="card-rule"></div>
+          <div class="card-rule"></div>
+          <div class="card-rule"></div>
+          <div class="card-rule"></div>
+        </div>
+        <div class="card-postmark" aria-hidden="true">
+          <div class="postmark-t">LOS<br>ANGELES<br>2026</div>
+        </div>
+        <div class="card-stamp" aria-hidden="true">
+          <div class="stamp-t">USC</div>
+          <div class="stamp-s">4.0 GPA</div>
+        </div>
+        <div class="card-content">
+          <p class="card-greeting">Hello, I'm —</p>
+          <h1 class="card-name">Alice<br>Jiang</h1>
+          <p class="card-bio">Sophomore studying AI for Business at USC — Marshall &amp; Viterbi. I build at the intersection of machine learning, product, and research.</p>
+          <div class="card-tags">
+            <span class="ctag">AI &amp; ML</span>
+            <span class="ctag">Product</span>
+            <span class="ctag">Research</span>
+            <span class="ctag">Mandarin</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ─── PROJECTS ───────────────────────────────────────────────── -->
+  <div class="sec-div" style="padding-top: 8px;">
+    <div class="sdl"></div>
+    <span class="sdlabel">things I've built</span>
+    <div class="sdl"></div>
+  </div>
+
+  <section class="proj-section" id="projects" aria-label="Projects">
+
+    <!-- Row 1 -->
+    <div class="proj-row">
+
+      <!-- Echo -->
+      <a href="projects/echo.html" class="pol" data-reveal
+         style="width:216px; --rot:-2.5deg; margin-right:16px; margin-top:22px; z-index:2;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="18" height="42">
+            <circle cx="9" cy="9" r="8" fill="#c8a870" stroke="#8a6a40" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#b89060" stroke="#8a6a40" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="pol-img" style="width:196px; height:178px; background:#d4e4cc;">
+          <div class="pol-badge">1st place</div>
+          <!-- Replace with images/projects/echo.jpg -->
+          <img src="images/projects/echo.jpg" alt="Echo project" style="position:absolute;inset:0;"
+               onerror="this.style.display='none'">
+          <div class="pol-ph">
+            <svg viewBox="0 0 48 48" width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="24" r="5" fill="#3a6a30" opacity="0.5"/>
+              <circle cx="24" cy="24" r="11" fill="none" stroke="#3a6a30" stroke-width="1.5" opacity="0.38"/>
+              <circle cx="24" cy="24" r="18" fill="none" stroke="#3a6a30" stroke-width="1.2" opacity="0.22"/>
+              <circle cx="24" cy="24" r="23" fill="none" stroke="#3a6a30" stroke-width="1" opacity="0.12"/>
+            </svg>
+            <small>add photo</small>
+          </div>
+        </div>
+        <div class="pol-cap">
+          <div class="pol-title">Echo</div>
+          <div class="pol-sub">sign language · wearable · ML</div>
+        </div>
+      </a>
+
+      <!-- Alzheimer's Prediction -->
+      <a href="projects/alzheimers-prediction.html" class="pol" data-reveal
+         style="width:190px; --rot:1.5deg; margin-right:16px; z-index:3;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="18" height="42">
+            <circle cx="9" cy="9" r="8" fill="#9a90c8" stroke="#6a60a0" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#8a80b8" stroke="#6a60a0" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="pol-img" style="width:170px; height:162px; background:#d8d0e8;">
+          <img src="images/projects/alzheimers.jpg" alt="Alzheimer's prediction project" style="position:absolute;inset:0;"
+               onerror="this.style.display='none'">
+          <div class="pol-ph">
+            <svg viewBox="0 0 48 48" width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 10 Q34 9 38 16 Q44 18 43 26 Q43 34 37 38 Q33 42 24 42 Q15 42 11 38 Q5 34 5 26 Q5 18 11 16 Q14 9 24 10Z" fill="none" stroke="#5a4a8a" stroke-width="1.5" opacity="0.42"/>
+              <line x1="24" y1="10" x2="24" y2="42" stroke="#5a4a8a" stroke-width="1" opacity="0.22" stroke-dasharray="2,3"/>
+              <circle cx="18" cy="22" r="2.5" fill="#5a4a8a" opacity="0.35"/>
+              <circle cx="30" cy="28" r="2.5" fill="#5a4a8a" opacity="0.35"/>
+              <path d="M14 30 Q20 24 28 26 Q34 28 36 22" fill="none" stroke="#5a4a8a" stroke-width="1.2" opacity="0.3"/>
+            </svg>
+            <small>add photo</small>
+          </div>
+        </div>
+        <div class="pol-cap">
+          <div class="pol-title">Alzheimer's Prediction</div>
+          <div class="pol-sub">neuroimaging · deep learning</div>
+        </div>
+      </a>
+
+      <!-- ShadeLA -->
+      <a href="projects/shadela.html" class="pol" data-reveal
+         style="width:200px; --rot:-1deg; margin-top:12px; z-index:2;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="18" height="42">
+            <circle cx="9" cy="9" r="8" fill="#c8a870" stroke="#8a6a40" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#b89060" stroke="#8a6a40" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="pol-img" style="width:180px; height:168px; background:#f0e4cc;">
+          <img src="images/projects/shadela.jpg" alt="ShadeLA project" style="position:absolute;inset:0;"
+               onerror="this.style.display='none'">
+          <div class="pol-ph">
+            <svg viewBox="0 0 48 48" width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="24" cy="20" r="8" fill="none" stroke="#8a5a20" stroke-width="1.5" opacity="0.45"/>
+              <path d="M24 8V4 M36 20H40 M24 32V36 M12 20H8 M32 12L35 9 M32 28L35 31 M16 28L13 31 M16 12L13 9" stroke="#8a5a20" stroke-width="1.5" opacity="0.38" stroke-linecap="round"/>
+              <ellipse cx="32" cy="38" rx="13" ry="5" fill="rgba(138,90,32,0.15)" stroke="#8a5a20" stroke-width="1" opacity="0.4"/>
+              <path d="M10 38 L38 38" stroke="#8a5a20" stroke-width="1" opacity="0.25"/>
+            </svg>
+            <small>add photo</small>
+          </div>
+        </div>
+        <div class="pol-cap">
+          <div class="pol-title">ShadeLA</div>
+          <div class="pol-sub">geospatial ML · LA2028</div>
+        </div>
+      </a>
+
+    </div><!-- /row 1 -->
+
+    <!-- Row 2 -->
+    <div class="proj-row">
+
+      <!-- Meds AI -->
+      <a href="projects/meds-ai.html" class="pol" data-reveal
+         style="width:194px; --rot:2deg; margin-right:16px; margin-top:10px; z-index:2;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="18" height="42">
+            <circle cx="9" cy="9" r="8" fill="#e08888" stroke="#b05060" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#d07878" stroke="#b05060" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="pol-img" style="width:174px; height:164px; background:#fce4d8;">
+          <img src="images/projects/meds-ai.jpg" alt="Meds AI project" style="position:absolute;inset:0;"
+               onerror="this.style.display='none'">
+          <div class="pol-ph">
+            <svg viewBox="0 0 48 48" width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+              <rect x="20" y="10" width="8" height="28" rx="4" fill="none" stroke="#8a3a20" stroke-width="1.5" opacity="0.45"/>
+              <rect x="10" y="20" width="28" height="8" rx="4" fill="none" stroke="#8a3a20" stroke-width="1.5" opacity="0.45"/>
+              <circle cx="24" cy="24" r="20" fill="none" stroke="#8a3a20" stroke-width="0.8" opacity="0.18"/>
+            </svg>
+            <small>add photo</small>
+          </div>
+        </div>
+        <div class="pol-cap">
+          <div class="pol-title">Meds AI</div>
+          <div class="pol-sub">LLMs · RAG · healthcare</div>
+        </div>
+      </a>
+
+      <!-- Disaster CV -->
+      <a href="projects/disaster-cv.html" class="pol" data-reveal
+         style="width:224px; --rot:-3deg; margin-right:16px; margin-top:26px; z-index:3;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="18" height="42">
+            <circle cx="9" cy="9" r="8" fill="#70a8c8" stroke="#4a7a9a" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#6098b8" stroke="#4a7a9a" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="pol-img" style="width:204px; height:188px; background:#cce4ec;">
+          <img src="images/projects/disaster-cv.jpg" alt="Disaster CV Pipeline project" style="position:absolute;inset:0;"
+               onerror="this.style.display='none'">
+          <div class="pol-ph">
+            <svg viewBox="0 0 48 48" width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="10" width="40" height="28" rx="2" fill="none" stroke="#2a5a7a" stroke-width="1.5" opacity="0.4"/>
+              <line x1="4" y1="20" x2="44" y2="20" stroke="#2a5a7a" stroke-width="1" opacity="0.22"/>
+              <line x1="4" y1="28" x2="44" y2="28" stroke="#2a5a7a" stroke-width="1" opacity="0.22"/>
+              <line x1="18" y1="10" x2="18" y2="38" stroke="#2a5a7a" stroke-width="1" opacity="0.22"/>
+              <line x1="32" y1="10" x2="32" y2="38" stroke="#2a5a7a" stroke-width="1" opacity="0.22"/>
+              <circle cx="11" cy="15" r="2" fill="#2a5a7a" opacity="0.38"/>
+              <circle cx="25" cy="24" r="2.5" fill="#2a5a7a" opacity="0.5"/>
+              <circle cx="38" cy="33" r="2" fill="#2a5a7a" opacity="0.38"/>
+            </svg>
+            <small>add photo</small>
+          </div>
+        </div>
+        <div class="pol-cap">
+          <div class="pol-title">Disaster CV Pipeline</div>
+          <div class="pol-sub">satellite imagery · 96% acc.</div>
+        </div>
+      </a>
+
+      <!-- Robins Cut -->
+      <a href="projects/robins-cut.html" class="pol" data-reveal
+         style="width:184px; --rot:1deg; margin-top:6px; z-index:2;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="18" height="42">
+            <circle cx="9" cy="9" r="8" fill="#c8a870" stroke="#8a6a40" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#b89060" stroke="#8a6a40" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="pol-img" style="width:164px; height:156px; background:#e8e4d8;">
+          <img src="images/projects/robins-cut.jpg" alt="Robins Cut project" style="position:absolute;inset:0;"
+               onerror="this.style.display='none'">
+          <div class="pol-ph">
+            <svg viewBox="0 0 48 48" width="44" height="44" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="12" width="36" height="26" rx="2" fill="none" stroke="#5a4a20" stroke-width="1.5" opacity="0.4"/>
+              <rect x="6" y="12" width="36" height="7" rx="2" fill="none" stroke="#5a4a20" stroke-width="1.5" opacity="0.4"/>
+              <line x1="16" y1="12" x2="16" y2="19" stroke="#5a4a20" stroke-width="1.5" opacity="0.4"/>
+              <line x1="24" y1="12" x2="22" y2="19" stroke="#5a4a20" stroke-width="1.5" opacity="0.4"/>
+              <line x1="32" y1="12" x2="28" y2="19" stroke="#5a4a20" stroke-width="1.5" opacity="0.4"/>
+              <path d="M20 26 L30 31 L20 36 Z" fill="#5a4a20" opacity="0.32"/>
+            </svg>
+            <small>add photo</small>
+          </div>
+        </div>
+        <div class="pol-cap">
+          <div class="pol-title">Robins Cut</div>
+          <div class="pol-sub">AI film dashboard · GPT</div>
+        </div>
+      </a>
+
+    </div><!-- /row 2 -->
+
+  </section>
+
+  <!-- ─── EXPERIENCE ─────────────────────────────────────────────── -->
+  <div class="sec-div" style="padding-top: 8px;">
+    <div class="sdl"></div>
+    <span class="sdlabel">where I've been</span>
+    <div class="sdl"></div>
+  </div>
+
+  <section class="exp-section" id="experience" aria-label="Experience">
+
+    <!-- Row 1 -->
+    <div class="exp-row">
+
+      <div class="exp-card" data-reveal
+           style="width:258px; --rot:-1.5deg; margin-right:12px; margin-top:24px; z-index:2;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="16" height="38">
+            <circle cx="9" cy="9" r="8" fill="#e08888" stroke="#b05060" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#d07878" stroke="#b05060" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="exp-co">Blue Modern Advisory</div>
+        <div class="exp-role">AI Product Intern</div>
+        <div class="exp-date">Feb 2026 – Present</div>
+        <ul class="exp-ul">
+          <li>PM for early-stage health app; lead 6-person cross-functional team</li>
+          <li>Building conversational AI agent with personalized, context-aware interactions</li>
+          <li>Define product roadmap, vision &amp; manage sprints</li>
+        </ul>
+      </div>
+
+      <div class="exp-card" data-reveal
+           style="width:244px; --rot:1deg; margin-right:12px; margin-top:8px; z-index:3;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="16" height="38">
+            <circle cx="9" cy="9" r="8" fill="#9a90c8" stroke="#6a60a0" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#8a80b8" stroke="#6a60a0" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="exp-co">USC Irimia Lab</div>
+        <div class="exp-role">Undergraduate Researcher</div>
+        <div class="exp-date">Sep 2025 – Present</div>
+        <ul class="exp-ul">
+          <li>ML &amp; deep learning pipelines integrating neuroimaging, cognitive &amp; clinical data</li>
+          <li>Predicting conversion to Alzheimer's &amp; MCI; writing research paper</li>
+        </ul>
+      </div>
+
+      <div class="exp-card" data-reveal
+           style="width:250px; --rot:-0.5deg; margin-top:16px; z-index:2;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="16" height="38">
+            <circle cx="9" cy="9" r="8" fill="#70a8c8" stroke="#4a7a9a" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#6098b8" stroke="#4a7a9a" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="exp-co">CAIS++</div>
+        <div class="exp-role">Student Researcher</div>
+        <div class="exp-date">Sep 2025 – Present</div>
+        <ul class="exp-ul">
+          <li>ShadeLA: geospatial ML for equitable shade ahead of LA2028 Olympics</li>
+          <li>Findings presented to city stakeholders</li>
+          <li>Disaster CV pipeline on satellite imagery (96% accuracy, PyTorch)</li>
+        </ul>
+      </div>
+
+    </div><!-- /exp row 1 -->
+
+    <!-- Row 2 -->
+    <div class="exp-row" style="margin-top: 8px;">
+
+      <div class="exp-card" data-reveal
+           style="width:244px; --rot:1.5deg; margin-right:12px; margin-top:8px; z-index:2;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="16" height="38">
+            <circle cx="9" cy="9" r="8" fill="#8aba80" stroke="#5a8a50" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#7aaa70" stroke="#5a8a50" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="exp-co">Biokind Analytics</div>
+        <div class="exp-role">Data Analyst</div>
+        <div class="exp-date">Jan – May 2025</div>
+        <ul class="exp-ul">
+          <li>Analyzed ops &amp; finance for Project Angel Food (2,700 clients/day)</li>
+          <li>PowerBI dashboard identified +40% revenue improvement opportunity</li>
+          <li>Delivered data-driven strategy recommendations</li>
+        </ul>
+      </div>
+
+      <div class="exp-card" data-reveal
+           style="width:256px; --rot:-1deg; margin-top:20px; z-index:3;">
+        <div class="pin" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="16" height="38">
+            <circle cx="9" cy="9" r="8" fill="#c8a870" stroke="#8a6a40" stroke-width="1.2"/>
+            <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+            <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+            <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#b89060" stroke="#8a6a40" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <div class="exp-co">Marshall AI Association</div>
+        <div class="exp-role">Biotech Project Team Lead</div>
+        <div class="exp-date">Sep 2024 – Present</div>
+        <ul class="exp-ul">
+          <li>Lead 6-person cross-disciplinary team (business + engineering)</li>
+          <li>AI product strategy and technical development each semester</li>
+        </ul>
+      </div>
+
+    </div><!-- /exp row 2 -->
+
+  </section>
+
+  <!-- ─── CONTACT ────────────────────────────────────────────────── -->
+  <div class="sec-div" style="padding-top: 8px;">
+    <div class="sdl"></div>
+    <span class="sdlabel">let's connect</span>
+    <div class="sdl"></div>
+  </div>
+
+  <div class="contact-wrap" id="contact">
+    <div class="contact-card">
+      <div class="pin pin-l" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="16" height="38">
+          <circle cx="9" cy="9" r="8" fill="#c8a870" stroke="#8a6a40" stroke-width="1.2"/>
+          <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+          <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+          <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#b89060" stroke="#8a6a40" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="pin pin-r" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="16" height="38">
+          <circle cx="9" cy="9" r="8" fill="#c8a870" stroke="#8a6a40" stroke-width="1.2"/>
+          <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+          <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+          <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#b89060" stroke="#8a6a40" stroke-width="0.8"/>
+        </svg>
+      </div>
+      <div class="contact-left">
+        <h2 class="contact-h2">let's build something together</h2>
+        <p class="contact-sub">
+          <a href="mailto:alicejiangt@gmail.com">alicejiangt@gmail.com</a>
+          &nbsp;·&nbsp;
+          <a href="https://linkedin.com/in/alice-jiang1" target="_blank" rel="noopener noreferrer">linkedin.com/in/alice-jiang1</a>
+          &nbsp;·&nbsp;
+          <a href="https://github.com/alicej06" target="_blank" rel="noopener noreferrer">github.com/alicej06</a>
+        </p>
+      </div>
+      <a class="contact-btn" href="mailto:alicejiangt@gmail.com">say hello →</a>
+    </div>
+  </div>
+
+  <footer>
+    © 2026 alice jiang &nbsp;·&nbsp; USC Marshall &amp; Viterbi &nbsp;·&nbsp; Class of 2027
+  </footer>
+
+</div><!-- #site -->
+
+<script>
+  // ── Custom cursor ──────────────────────────────────────────────
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top  = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, .pol, .exp-card').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+
+  // ── Scroll-reveal (staggered) ──────────────────────────────────
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('in'), i * 85);
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+
+  document.querySelectorAll('[data-reveal]').forEach(el => io.observe(el));
+
+  // ── Remove clip-path after iris animation ──────────────────────
+  const site = document.getElementById('site');
+  site.addEventListener('animationend', () => {
+    site.style.clipPath = 'none';
+  }, { once: true });
+</script>
+
+</body>
+</html>

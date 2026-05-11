@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alzheimer's Prediction — Alice Jiang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root { --bg: #f5f0e8; --paper: #fffdf8; --ink: #2a2118; --ink2: #6a5a48; --ink3: #9a8a78; --gold: #c8a870; --gold2: #9a7840; --accent: #d8d0e8; --accent-dark: #3a2a5a; }
+    html { scroll-behavior: smooth; }
+    body { background: #1a1410; font-family: 'DM Sans', sans-serif; cursor: none; min-height: 100vh; overflow-x: hidden; }
+    #cursor { position: fixed; pointer-events: none; z-index: 99999; width: 18px; height: 42px; transform: translate(-50%, -10px); transition: transform 0.1s ease; top: -100px; left: -100px; }
+    #cursor.big { transform: translate(-50%, -10px) scale(1.35); }
+    #site { background: var(--bg); min-height: 100vh; animation: iris 1.1s cubic-bezier(0.77,0,0.18,1) both; }
+    @keyframes iris { 0% { clip-path: circle(0px at 50% 36%); } 100% { clip-path: circle(160% at 50% 36%); } }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 22px 52px; background: var(--bg); border-bottom: 0.5px solid rgba(0,0,0,0.07); position: sticky; top: 0; z-index: 200; }
+    .nav-logo { font-family: 'Alex Brush', cursive; font-size: 28px; color: var(--ink); text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; }
+    .nav-links a { font-size: 11px; color: var(--ink3); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+    .back { display: inline-flex; align-items: center; gap: 8px; padding: 28px 52px 0; font-size: 11px; color: var(--ink3); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s; }
+    .back:hover { color: var(--ink); }
+    .proj-hero { margin: 28px 52px 0; background: var(--accent); position: relative; overflow: hidden; min-height: 320px; display: flex; align-items: flex-end; }
+    .proj-hero-img { position: absolute; inset: 0; }
+    .proj-hero-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .proj-hero-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+    .proj-hero-overlay { position: relative; z-index: 1; padding: 40px 48px; background: linear-gradient(to top, rgba(58,42,90,0.72) 0%, transparent 100%); width: 100%; }
+    .proj-title { font-family: 'Cormorant Garamond', serif; font-size: 54px; font-weight: 300; font-style: italic; color: #fff; line-height: 1.0; letter-spacing: -1px; margin-bottom: 6px; }
+    .proj-tagline { font-size: 13px; color: rgba(255,255,255,0.78); letter-spacing: 0.06em; font-weight: 300; }
+    .proj-content { max-width: 760px; margin: 0 auto; padding: 52px 52px 80px; }
+    .proj-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 44px; }
+    .ptag { font-size: 10px; color: var(--accent-dark); border: 1px solid rgba(58,42,90,0.25); background: rgba(216,208,232,0.4); padding: 4px 12px; border-radius: 999px; letter-spacing: 0.04em; }
+    .proj-section { margin-bottom: 36px; }
+    .proj-section h2 { font-family: 'Playfair Display', serif; font-size: 20px; font-style: italic; color: var(--ink); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 0.5px solid rgba(0,0,0,0.1); }
+    .proj-section p, .proj-section li { font-size: 13px; color: var(--ink2); line-height: 1.82; margin-bottom: 8px; font-weight: 300; }
+    .proj-section ul { list-style: none; padding: 0; }
+    .proj-section ul li { padding-left: 18px; position: relative; }
+    .proj-section ul li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
+    .proj-stat { display: inline-flex; flex-direction: column; align-items: center; background: var(--paper); border: 0.5px solid rgba(0,0,0,0.08); padding: 16px 28px; margin-right: 12px; margin-bottom: 12px; }
+    .proj-stat-val { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 400; color: var(--accent-dark); line-height: 1; }
+    .proj-stat-label { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); margin-top: 4px; }
+    footer { text-align: center; padding: 18px; font-size: 11px; color: #b8a890; letter-spacing: 0.1em; border-top: 0.5px solid rgba(0,0,0,0.06); }
+    @media (max-width: 720px) { body { cursor: auto; } #cursor { display: none; } nav, .back, .proj-content { padding-left: 24px; padding-right: 24px; } .proj-hero { margin-left: 0; margin-right: 0; } .proj-title { font-size: 38px; } }
+  </style>
+</head>
+<body>
+<div id="cursor" aria-hidden="true">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 42" width="18" height="42">
+    <circle cx="9" cy="9" r="8" fill="#9a90c8" stroke="#6a60a0" stroke-width="1.2"/>
+    <ellipse cx="6" cy="6.5" rx="3" ry="1.8" fill="white" opacity="0.42" transform="rotate(-25,6,6.5)"/>
+    <ellipse cx="9" cy="16" rx="3" ry="1.8" fill="rgba(0,0,0,0.18)"/>
+    <path d="M6.5 15 Q5 26 9 40 Q13 26 11.5 15 Z" fill="#8a80b8" stroke="#6a60a0" stroke-width="0.8"/>
+  </svg>
+</div>
+<div id="site">
+  <nav>
+    <a class="nav-logo" href="../index.html">alice jiang</a>
+    <div class="nav-links">
+      <a href="../index.html#about">about</a>
+      <a href="../index.html#projects">projects</a>
+      <a href="../index.html#experience">experience</a>
+      <a href="../index.html#contact">say hello</a>
+    </div>
+  </nav>
+  <a class="back" href="../index.html#projects">← back to projects</a>
+  <div class="proj-hero">
+    <div class="proj-hero-img">
+      <img src="../images/projects/alzheimers.jpg" alt="Alzheimer's prediction" onerror="this.style.display='none'">
+    </div>
+    <div class="proj-hero-ph" aria-hidden="true">
+      <svg viewBox="0 0 120 120" width="120" height="120" xmlns="http://www.w3.org/2000/svg" opacity="0.2">
+        <path d="M60 18 Q78 16 84 28 Q96 32 96 50 Q96 68 84 76 Q78 84 60 84 Q42 84 36 76 Q24 68 24 50 Q24 32 36 28 Q42 16 60 18Z" fill="none" stroke="#3a2a5a" stroke-width="3"/>
+        <line x1="60" y1="18" x2="60" y2="84" stroke="#3a2a5a" stroke-width="1.5" stroke-dasharray="4,5"/>
+        <circle cx="44" cy="46" r="5" fill="#3a2a5a"/>
+        <circle cx="76" cy="58" r="5" fill="#3a2a5a"/>
+        <path d="M32 62 Q46 50 58 54 Q72 58 86 44" fill="none" stroke="#3a2a5a" stroke-width="2"/>
+      </svg>
+    </div>
+    <div class="proj-hero-overlay">
+      <div class="proj-title">Alzheimer's Prediction</div>
+      <div class="proj-tagline">ML pipeline for early detection — USC Irimia Neuroimaging Lab</div>
+    </div>
+  </div>
+
+  <div class="proj-content">
+    <div class="proj-tags">
+      <span class="ptag">Deep Learning</span>
+      <span class="ptag">PyTorch</span>
+      <span class="ptag">Neuroimaging</span>
+      <span class="ptag">MRI Analysis</span>
+      <span class="ptag">scikit-learn</span>
+      <span class="ptag">Python</span>
+      <span class="ptag">Research Paper</span>
+    </div>
+
+    <div class="proj-section">
+      <h2>Overview</h2>
+      <p>As an undergraduate research assistant at the USC Irimia Neuroimaging Lab, I design and implement machine learning pipelines that integrate neuroimaging data (MRI, fMRI), cognitive assessments, and clinical records to predict conversion to mild cognitive impairment (MCI) and Alzheimer's disease.</p>
+      <p>This work is part of a broader research effort to enable earlier, non-invasive detection of neurodegeneration — currently in the paper-writing stage.</p>
+    </div>
+
+    <div class="proj-section">
+      <h2>Technical Approach</h2>
+      <ul>
+        <li>Preprocessing of structural and functional MRI data: skull stripping, registration, parcellation</li>
+        <li>Feature extraction from brain connectivity matrices (functional connectomes) and morphometric features</li>
+        <li>Multi-modal fusion of neuroimaging features with cognitive test scores (MMSE, MoCA) and clinical biomarkers</li>
+        <li>Comparative evaluation of classical ML (SVM, Random Forest) and deep learning (CNN, GNN) classifiers</li>
+        <li>Longitudinal analysis to track patient trajectories and identify early conversion signatures</li>
+      </ul>
+    </div>
+
+    <div class="proj-section">
+      <h2>Current Status</h2>
+      <ul>
+        <li>Model development and validation ongoing at USC Irimia Neuroimaging Lab</li>
+        <li>Writing research paper documenting methodology and findings</li>
+        <li>USC CURVE Fellow — awarded $1,250 to support independent undergraduate research</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>© 2026 alice jiang &nbsp;·&nbsp; USC Marshall &amp; Viterbi &nbsp;·&nbsp; Class of 2027</footer>
+</div>
+<script>
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+  document.querySelectorAll('a').forEach(el => { el.addEventListener('mouseenter', () => cursor.classList.add('big')); el.addEventListener('mouseleave', () => cursor.classList.remove('big')); });
+  document.getElementById('site').addEventListener('animationend', function() { this.style.clipPath = 'none'; }, { once: true });
+</script>
+</body>
+</html>
